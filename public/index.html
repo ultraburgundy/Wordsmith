@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styles.css" rel="stylesheet">
+    <link href="ico/favicon.ico?v=1" rel="icon">
+    <title>Wordsmith</title>
+</head>
+
+<body class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+        <div>
+            <button class="category-button" id="randomWordButton">
+                <img src="/public/media/question_mark.gif">
+            </button>
+            <p id="categoryOutput" class="text-4xl text-center transition duration-1000 opacity-0"></p>
+            <div id="alpha-buttons" class="font-medium text-center">
+                <button id="reset" hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 transition ease-in-out">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
+                      </svg>
+                </button>
+                <p class="p-4 text-xl win-prompt animate-bounce"></p>
+                <p id="attemptsOutput" class="p-6 m-6"></p>
+            </div>
+        </div>
+    <script src="wordsmith.js"></script>
+</body>
+
+</html>
