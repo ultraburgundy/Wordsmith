@@ -4,7 +4,7 @@
   "description": "word-guessing game",
   "main": "wordsmith.js",
   "scripts": {
-    "build-css": "tailwindcss build -i src/styles.css -o public/styles.css --watch"
+    "build-css": "tailwindcss build -i src/styles/styles.css -o src/styles/tailwind-styles.css --watch"
   },
   "keywords": [],
   "author": "rem",

@@ -62,7 +62,6 @@ function handleLetterListClick(LETTER_LIST) {
   });
 }
 
-
 function handleLetterClick(event, LETTER_POSITION) {
   if (LETTER_POSITION.length > 0) {
     const HIDDEN_ARRAY = SHOW_CATEGORY.textContent.split(" ");
@@ -103,7 +102,6 @@ function checkForWinner() {
   const WINNER_CHECKER = SHOW_CATEGORY.textContent.replace(/\s+/g, '');
   return WINNER_CHECKER === RANDOM_WORD;
 }
-
 
 async function selectRandomWord() {
   lettersEnabled = true;
