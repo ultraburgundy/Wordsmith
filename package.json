@@ -1,15 +1,21 @@
 {
+  "homepage": "http://ultraburgundy.github.io/Wordsmith",
   "name": "wordsmith",
   "version": "1.2.0",
   "description": "word-guessing game",
-  "main": "index.js",
+  "main": "./public/index.html",
   "scripts": {
-    "build-css": "tailwindcss build -i src/styles/styles.css -o src/styles/tailwind-styles.css --watch"
+    "build-css": "tailwindcss build -i src/styles/styles.css -o src/styles/tailwind-styles.css --watch",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "keywords": [],
   "author": "rem",
   "license": "ISC",
   "dependencies": {
     "tailwindcss": "^3.2.7"
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
   }
 }
