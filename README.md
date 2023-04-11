@@ -14,6 +14,9 @@ adjusted/improved styling
 typescript compiling
 score table has been added
 
+v1.2.1
+adjusted typescript file for better maintainability.
+
 FUTURE-TO-DO (v1.3)
 > add player name input
     > store player name input associated with score into localStorage
@@ -21,8 +24,6 @@ FUTURE-TO-DO (v1.3)
 > improve on styling
     > pulse effect on alphabet letter press event
         > make it responsive for small screens
-> make it more object-oriented
-    > organize it into classes
 > adjust score weights
     > conditional weights 
         > (if word.length > 4) => score is adjusted to be higher than 10points per letter, 1++ for each letter, hard-capping at 20. ()
