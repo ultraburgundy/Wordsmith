@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,266 +34,267 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-// game variables
-var ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
-var incorrectGuesses = 0;
-var RANDOM_WORD = null;
-var lettersEnabled = false;
-var currentScore = 0;
-// DOM elements
-var RESET_BUTTON = document.querySelector("#reset");
-var PLAY_BUTTON = document.querySelector("#continue");
-var FETCH_WORD_BUTTON = document.querySelector("#word-button");
-var SHOW_WORD = document.querySelector("#word-output");
-var SHOW_GUESSES = document.querySelector("#attemptsOutput");
-var GUESS_CHECKER = document.querySelector("#win-lose-check");
-var ALPHABET_CONTAINER = document.querySelector("#alphabet");
-var FIREWORKS_CONTAINER = document.querySelector("#fireworks-container");
-var WORD_SCORE_TABLE = document.querySelector("#word-score-table");
-function fetchRandomWord() {
-    return __awaiter(this, void 0, void 0, function () {
-        var RESPONSE, WORD_ARRAY, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, fetch("https://random-word-api.herokuapp.com/word")];
-                case 1:
-                    RESPONSE = _a.sent();
-                    return [4 /*yield*/, RESPONSE.json()];
-                case 2:
-                    WORD_ARRAY = _a.sent();
-                    return [2 /*return*/, WORD_ARRAY[0]];
-                case 3:
-                    error_1 = _a.sent();
-                    console.error("Error fetching random word:", error_1);
-                    return [2 /*return*/, ""];
-                case 4: return [2 /*return*/];
-            }
-        });
-    });
-}
-//removed unnecessary variable "ul", was not needed; only acted as redundant container.
-function createAlphabetButtons() {
-    for (var _i = 0, ALPHABET_1 = ALPHABET; _i < ALPHABET_1.length; _i++) {
-        var letter = ALPHABET_1[_i];
-        //makes each letter in the alphabet into li element
-        var ALPHABET_LETTER = document.createElement('li');
-        ALPHABET_LETTER.textContent = letter;
-        ALPHABET_CONTAINER.appendChild(ALPHABET_LETTER);
+var Game = /** @class */ (function () {
+    function Game() {
+        this.ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
+        this.RANDOM_WORD = null;
+        this.SHOW_WORD = document.querySelector("#word-output");
+        this.currentScore = 0;
+        this.incorrectGuesses = 0;
+        this.lettersEnabled = false;
+        this.checkForWinner();
     }
-    storeLetterClick(ALPHABET_CONTAINER);
-}
-createAlphabetButtons();
-function handleFetchButtonClick() {
-    if (FETCH_WORD_BUTTON) {
-        FETCH_WORD_BUTTON.addEventListener("click", function () {
-            if (FETCH_WORD_BUTTON) {
-                FETCH_WORD_BUTTON.style.display = "none";
-            }
-            if (ALPHABET_CONTAINER) {
-                ALPHABET_CONTAINER.style.display = "flex";
-            }
-            selectRandomWord();
+    Game.prototype.fetchRandomWord = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var RESPONSE, WORD_ARRAY, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, fetch("https://random-word-api.herokuapp.com/word")];
+                    case 1:
+                        RESPONSE = _a.sent();
+                        return [4 /*yield*/, RESPONSE.json()];
+                    case 2:
+                        WORD_ARRAY = _a.sent();
+                        return [2 /*return*/, WORD_ARRAY[0]];
+                    case 3:
+                        error_1 = _a.sent();
+                        console.error("Error fetching random word:", error_1);
+                        return [2 /*return*/, ""];
+                    case 4: return [2 /*return*/];
+                }
+            });
         });
-    }
-}
-handleFetchButtonClick();
-//event listener to iterate thru random word to find clicked letter; stores position in LETTER_POSITION
-function storeLetterClick(ALPHABET_LETTER) {
-    ALPHABET_LETTER.addEventListener("click", function (event) {
-        if (RANDOM_WORD && lettersEnabled) {
-            var target = event.target;
-            if (target.tagName.toLowerCase() === "li" && target instanceof HTMLElement) {
-                var CLICKED_LETTERS = target.textContent || "";
-                var LETTER_POSITION = [];
-                for (var i = 0; i < RANDOM_WORD.length; i++) {
-                    if (RANDOM_WORD[i] === CLICKED_LETTERS) {
-                        LETTER_POSITION.push(i);
+    };
+    Game.prototype.selectRandomWord = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, HIDDEN_ARRAY, HIDDEN_WORD;
+            var _this = this;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        this.lettersEnabled = true;
+                        _a = this;
+                        return [4 /*yield*/, this.fetchRandomWord()];
+                    case 1:
+                        _a.RANDOM_WORD = _b.sent();
+                        HIDDEN_ARRAY = new Array(this.RANDOM_WORD.length).fill("❓ ");
+                        HIDDEN_WORD = HIDDEN_ARRAY.join("");
+                        if (this.SHOW_WORD) {
+                            this.SHOW_WORD.textContent = HIDDEN_WORD;
+                            this.SHOW_WORD.classList.add("opacity-0");
+                            setTimeout(function () {
+                                _this.SHOW_WORD.style.opacity = "1";
+                            }, 50);
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //important method for game; defines most of the game logic
+    Game.prototype.handleLetterClick = function (clickedElement, LETTER_POSITION) {
+        if (LETTER_POSITION.length > 0) {
+            var HIDDEN_ARRAY_1 = this.SHOW_WORD ? (this.SHOW_WORD.textContent || "").split(" ") : [];
+            LETTER_POSITION.forEach(function (position) {
+                HIDDEN_ARRAY_1[position] = clickedElement.textContent || "";
+            });
+            if (this.SHOW_WORD) {
+                this.SHOW_WORD.textContent = HIDDEN_ARRAY_1.join(" ");
+            }
+            clickedElement.style.display = "none";
+            if (this.checkForWinner()) {
+                if (ui.SHOW_GUESSES) {
+                    ui.SHOW_GUESSES.textContent = "";
+                }
+                if (ui.GUESS_CHECKER && this.RANDOM_WORD) {
+                    ui.GUESS_CHECKER.textContent = "WINNER! You guessed the word \"".concat(this.RANDOM_WORD, "\"!");
+                }
+                if (ui.PLAY_BUTTON) {
+                    ui.PLAY_BUTTON.removeAttribute("hidden");
+                }
+                if (ui.RESET_BUTTON) {
+                    ui.RESET_BUTTON.removeAttribute("hidden");
+                    if (this.SHOW_WORD) {
+                        this.SHOW_WORD.textContent = "";
+                    }
+                    if (ui.ALPHABET_CONTAINER) {
+                        ui.ALPHABET_CONTAINER.style.display = "none";
                     }
                 }
-                handleLetterClick(target, LETTER_POSITION);
-            }
-        }
-    });
-}
-//processes click on stored letter.
-function handleLetterClick(clickedElement, LETTER_POSITION) {
-    if (LETTER_POSITION.length > 0) {
-        var HIDDEN_ARRAY_1 = SHOW_WORD ? (SHOW_WORD.textContent || "").split(" ") : [];
-        LETTER_POSITION.forEach(function (position) {
-            HIDDEN_ARRAY_1[position] = clickedElement.textContent || "";
-        });
-        if (SHOW_WORD) {
-            SHOW_WORD.textContent = HIDDEN_ARRAY_1.join(" ");
-        }
-        clickedElement.style.display = "none";
-        if (checkForWinner()) {
-            if (SHOW_GUESSES) {
-                SHOW_GUESSES.textContent = "";
-            }
-            if (GUESS_CHECKER && RANDOM_WORD) {
-                GUESS_CHECKER.textContent = "".concat(RANDOM_WORD, "!");
-            }
-            if (PLAY_BUTTON) {
-                PLAY_BUTTON.removeAttribute("hidden");
-            }
-            if (RESET_BUTTON) {
-                RESET_BUTTON.removeAttribute("hidden");
-                if (SHOW_WORD) {
-                    SHOW_WORD.textContent = "";
-                }
-                if (ALPHABET_CONTAINER) {
-                    ALPHABET_CONTAINER.style.display = "none";
+                ui.displayFireworks();
+                if (this.RANDOM_WORD) {
+                    scores.updateScoreTable(this.RANDOM_WORD);
                 }
             }
-            displayFireworks();
-            //update WORD_SCORE table
-            if (RANDOM_WORD) {
-                score.updateScore(RANDOM_WORD);
-            }
         }
-    }
-    else {
-        incorrectGuesses++;
-        var MAX_INCORRECT_GUESSES = 10 - incorrectGuesses;
-        var message = "\u274C ".concat(MAX_INCORRECT_GUESSES, " guesses left.");
-        if (SHOW_GUESSES) {
-            SHOW_GUESSES.textContent = message;
-        }
-        clickedElement.style.display = "none";
-        if (MAX_INCORRECT_GUESSES === 0) {
-            incorrectGuesses--;
-            if (GUESS_CHECKER && RANDOM_WORD) {
-                GUESS_CHECKER.textContent = "Game over! Word was \"".concat(RANDOM_WORD, "\"");
+        else {
+            this.incorrectGuesses++;
+            var MAX_INCORRECT_GUESSES = 10 - this.incorrectGuesses;
+            var message = "\u274C ".concat(MAX_INCORRECT_GUESSES, " guesses left.");
+            if (ui.SHOW_GUESSES) {
+                ui.SHOW_GUESSES.textContent = message;
             }
-            if (RESET_BUTTON) {
-                RESET_BUTTON.removeAttribute("hidden");
+            clickedElement.style.display = "none";
+            if (MAX_INCORRECT_GUESSES === 0) {
+                this.incorrectGuesses--;
+                if (ui.GUESS_CHECKER && this.RANDOM_WORD) {
+                    ui.GUESS_CHECKER.textContent = "Game over! Word was \"".concat(this.RANDOM_WORD, "\"");
+                }
+                if (ui.RESET_BUTTON) {
+                    ui.RESET_BUTTON.removeAttribute("hidden");
+                }
+                if (this.SHOW_WORD) {
+                    this.SHOW_WORD.textContent = "";
+                }
+                if (ui.SHOW_GUESSES) {
+                    ui.SHOW_GUESSES.textContent = "";
+                }
+                if (ui.ALPHABET_CONTAINER) {
+                    ui.ALPHABET_CONTAINER.style.display = "none";
+                }
             }
-            if (SHOW_WORD) {
-                SHOW_WORD.textContent = "";
-            }
-            if (SHOW_GUESSES) {
-                SHOW_GUESSES.textContent = "";
-            }
-            if (ALPHABET_CONTAINER) {
-                ALPHABET_CONTAINER.style.display = "none";
-            }
-        }
-    }
-}
-var Score = /** @class */ (function () {
-    function Score() {
-    }
-    Score.prototype.clearTotalScore = function () {
-        for (var i = 1, row = void 0; (row = WORD_SCORE_TABLE.rows[i]); i++) {
-            row.cells[2].textContent = "";
         }
     };
-    Score.prototype.updateScore = function (word) {
+    Game.prototype.checkForWinner = function () {
+        if (this.SHOW_WORD) {
+            var WINNER_CHECKER = (this.SHOW_WORD.textContent || "").replace(/\s+/g, "");
+            return WINNER_CHECKER === this.RANDOM_WORD;
+        }
+        return false;
+    };
+    Game.prototype.resetGame = function () {
+        this.lettersEnabled = false;
+        this.RANDOM_WORD = null;
+        this.incorrectGuesses = 0;
+        if (this.SHOW_WORD) {
+            this.SHOW_WORD.textContent = "";
+        }
+        if (ui.SHOW_GUESSES) {
+            ui.SHOW_GUESSES.textContent = "";
+        }
+        if (ui.RESET_BUTTON) {
+            ui.RESET_BUTTON.setAttribute("hidden", "true");
+        }
+        if (ui.PLAY_BUTTON) {
+            ui.PLAY_BUTTON.setAttribute("hidden", "true");
+        }
+        if (ui.WORD_SCORE_TABLE) {
+            ui.WORD_SCORE_TABLE.classList.add("hidden");
+        }
+        if (ui.FETCH_WORD_BUTTON) {
+            ui.FETCH_WORD_BUTTON.style.display = "";
+        }
+        if (ui.FIREWORKS_CONTAINER)
+            ui.FIREWORKS_CONTAINER.innerHTML = "";
+        var ALPHABET_LETTERS = document.querySelectorAll("#alphabet li");
+        ALPHABET_LETTERS.forEach(function (letter) {
+            letter.style.display = "";
+        });
+        if (ui.ALPHABET_CONTAINER) {
+            ui.ALPHABET_CONTAINER.style.display = "none";
+        }
+    };
+    return Game;
+}());
+var game = new Game;
+var Ui = /** @class */ (function () {
+    function Ui(game) {
+        this.game = game;
+        this.RESET_BUTTON = document.querySelector("#reset");
+        this.PLAY_BUTTON = document.querySelector("#continue");
+        this.FETCH_WORD_BUTTON = document.querySelector("#word-button");
+        this.SHOW_GUESSES = document.querySelector("#attemptsOutput");
+        this.GUESS_CHECKER = document.querySelector("#win-lose-check");
+        this.ALPHABET_CONTAINER = document.querySelector("#alphabet");
+        this.FIREWORKS_CONTAINER = document.querySelector("#fireworks-container");
+        this.WORD_SCORE_TABLE = document.querySelector("#word-score-table");
+        this.createAlphabetButtons();
+        this.handleFetchWordButtonClick();
+    }
+    //++
+    Ui.prototype.createAlphabetButtons = function () {
+        for (var _i = 0, _a = game.ALPHABET; _i < _a.length; _i++) {
+            var letter = _a[_i];
+            //makes each letter into li element
+            var ALPHABET_LETTER = document.createElement('li');
+            ALPHABET_LETTER.textContent = letter;
+            this.ALPHABET_CONTAINER.appendChild(ALPHABET_LETTER);
+            this.storeLetterClick(ALPHABET_LETTER);
+        }
+    };
+    //event listener for ? mark button
+    Ui.prototype.handleFetchWordButtonClick = function () {
+        var _this = this;
+        if (this.FETCH_WORD_BUTTON) {
+            this.FETCH_WORD_BUTTON.addEventListener("click", function () {
+                if (_this.FETCH_WORD_BUTTON) {
+                    _this.FETCH_WORD_BUTTON.style.display = "none";
+                }
+                if (_this.ALPHABET_CONTAINER) {
+                    _this.ALPHABET_CONTAINER.style.display = "flex";
+                }
+                game.selectRandomWord();
+            });
+        }
+    };
+    //event listener to iterate thru random word to find clicked letter; stores position in LETTER_POSITION
+    Ui.prototype.storeLetterClick = function (ALPHABET_LETTER) {
+        ALPHABET_LETTER.addEventListener("click", function (event) {
+            if (game.RANDOM_WORD && game.lettersEnabled) {
+                var target = event.target;
+                if (target.tagName.toLowerCase() === "li" && target) {
+                    var CLICKED_LETTERS = target.textContent || "";
+                    var LETTER_POSITION = [];
+                    for (var i = 0; i < game.RANDOM_WORD.length; i++) {
+                        if (game.RANDOM_WORD[i] === CLICKED_LETTERS) {
+                            LETTER_POSITION.push(i);
+                        }
+                    }
+                    game.handleLetterClick(target, LETTER_POSITION);
+                }
+            }
+        });
+    };
+    Ui.prototype.displayFireworks = function () {
+        if (this.GUESS_CHECKER) {
+            this.GUESS_CHECKER.classList.add("z-20");
+        }
+        if (this.RESET_BUTTON) {
+            this.RESET_BUTTON.classList.add("z-20");
+        }
+        if (this.WORD_SCORE_TABLE) {
+            this.WORD_SCORE_TABLE.classList.remove("hidden");
+        }
+        if (this.FIREWORKS_CONTAINER) {
+            var FIREWORKS = document.createElement("img");
+            FIREWORKS.src = "./assets/images/fireworks.gif";
+            FIREWORKS.classList.add("fireworks");
+            this.FIREWORKS_CONTAINER.innerHTML = "";
+            this.FIREWORKS_CONTAINER.appendChild(FIREWORKS);
+        }
+    };
+    return Ui;
+}());
+var ui = new Ui(game);
+var Scores = /** @class */ (function () {
+    function Scores(game) {
+        this.game = game;
+    }
+    Scores.prototype.updateScoreTable = function (word) {
         var WORD_SCORE = word.length * 10;
-        var TOTAL_SCORE = currentScore += WORD_SCORE;
-        var ROW = WORD_SCORE_TABLE.insertRow();
+        var TOTAL_SCORE = game.currentScore += WORD_SCORE;
+        var ROW = ui.WORD_SCORE_TABLE.insertRow();
         var WORD_CELL = ROW.insertCell(0);
         var SCORE_CELL = ROW.insertCell(1);
-        var TOTAL_SCORE_CELL = ROW.insertCell(2);
         WORD_CELL.textContent = word;
         SCORE_CELL.textContent = WORD_SCORE.toString();
-        this.clearTotalScore();
-        if (PLAY_BUTTON) {
+        if (ui.PLAY_BUTTON) {
+            var TOTAL_SCORE_CELL = ROW.insertCell(2);
             TOTAL_SCORE_CELL.textContent = TOTAL_SCORE.toString();
         }
     };
-    return Score;
+    return Scores;
 }());
-var score = new Score;
-function checkForWinner() {
-    if (SHOW_WORD) {
-        var WINNER_CHECKER = (SHOW_WORD.textContent || "").replace(/\s+/g, '');
-        return WINNER_CHECKER === RANDOM_WORD;
-    }
-    return false;
-}
-function displayFireworks() {
-    if (GUESS_CHECKER) {
-        GUESS_CHECKER.classList.add("z-20");
-    }
-    if (RESET_BUTTON) {
-        RESET_BUTTON.classList.add("z-20");
-    }
-    if (WORD_SCORE_TABLE) {
-        WORD_SCORE_TABLE.classList.remove("hidden");
-    }
-    if (FIREWORKS_CONTAINER) {
-        var FIREWORKS = document.createElement("img");
-        FIREWORKS.src = "./assets/images/fireworks.gif";
-        FIREWORKS.classList.add("fireworks");
-        FIREWORKS_CONTAINER.innerHTML = "";
-        FIREWORKS_CONTAINER.appendChild(FIREWORKS);
-    }
-}
-function selectRandomWord() {
-    return __awaiter(this, void 0, void 0, function () {
-        var HIDDEN_ARRAY, HIDDEN_WORD;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    lettersEnabled = true;
-                    return [4 /*yield*/, fetchRandomWord()];
-                case 1:
-                    RANDOM_WORD = _a.sent();
-                    HIDDEN_ARRAY = new Array(RANDOM_WORD.length).fill("❓ ");
-                    HIDDEN_WORD = HIDDEN_ARRAY.join("");
-                    if (SHOW_WORD) {
-                        SHOW_WORD.textContent = HIDDEN_WORD;
-                        SHOW_WORD.classList.add("opacity-0"); // Set initial opacity to 0
-                        setTimeout(function () {
-                            SHOW_WORD.style.opacity = "1";
-                        }, 50);
-                    }
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function resetGame() {
-    lettersEnabled = false;
-    RANDOM_WORD = null;
-    incorrectGuesses = 0;
-    if (SHOW_GUESSES) {
-        SHOW_GUESSES.textContent = "";
-    }
-    if (GUESS_CHECKER) {
-        GUESS_CHECKER.textContent = "";
-    }
-    if (RESET_BUTTON) {
-        RESET_BUTTON.setAttribute("hidden", "true");
-    }
-    if (PLAY_BUTTON) {
-        PLAY_BUTTON.setAttribute("hidden", "true");
-    }
-    if (WORD_SCORE_TABLE) {
-        WORD_SCORE_TABLE.classList.add("hidden");
-    }
-    if (FETCH_WORD_BUTTON) {
-        FETCH_WORD_BUTTON.style.display = "";
-    }
-    if (FIREWORKS_CONTAINER)
-        FIREWORKS_CONTAINER.innerHTML = "";
-    var ALPHABET_LETTERS = document.querySelectorAll("#alphabet li");
-    ALPHABET_LETTERS.forEach(function (letter) {
-        letter.style.display = "";
-    });
-    if (ALPHABET_CONTAINER) {
-        ALPHABET_CONTAINER.style.display = "none";
-    }
-}
-// Listener for play button to reset
-if (RESET_BUTTON || PLAY_BUTTON) {
-    RESET_BUTTON.addEventListener("click", function () {
-        resetGame();
-    });
-    PLAY_BUTTON.addEventListener("click", function () {
-        resetGame();
-    });
-}
+var scores = new Scores(game);
