@@ -93,6 +93,13 @@ var Game = /** @class */ (function () {
             });
         });
     };
+    Game.prototype.checkForWinner = function () {
+        if (this.SHOW_WORD) {
+            var WINNER_CHECKER = (this.SHOW_WORD.textContent || "").replace(/\s+/g, "");
+            return WINNER_CHECKER === this.RANDOM_WORD;
+        }
+        return false;
+    };
     //important method for game; defines most of the game logic
     Game.prototype.handleLetterClick = function (clickedElement, LETTER_POSITION) {
         if (LETTER_POSITION.length > 0) {
@@ -124,7 +131,6 @@ var Game = /** @class */ (function () {
                     }
                 }
                 ui.displayFireworks();
-                //update WORD_SCORE table
                 if (this.RANDOM_WORD) {
                     scores.updateScoreTable(this.RANDOM_WORD);
                 }
@@ -158,14 +164,7 @@ var Game = /** @class */ (function () {
             }
         }
     };
-    Game.prototype.checkForWinner = function () {
-        if (this.SHOW_WORD) {
-            var WINNER_CHECKER = (this.SHOW_WORD.textContent || "").replace(/\s+/g, "");
-            return WINNER_CHECKER === this.RANDOM_WORD;
-        }
-        return false;
-    };
-    Game.prototype.resetGame = function () {
+    Game.prototype.newGame = function () {
         this.lettersEnabled = false;
         this.RANDOM_WORD = null;
         this.incorrectGuesses = 0;
@@ -174,6 +173,9 @@ var Game = /** @class */ (function () {
         }
         if (ui.SHOW_GUESSES) {
             ui.SHOW_GUESSES.textContent = "";
+        }
+        if (ui.GUESS_CHECKER) {
+            ui.GUESS_CHECKER.textContent = "";
         }
         if (ui.RESET_BUTTON) {
             ui.RESET_BUTTON.setAttribute("hidden", "true");
@@ -199,9 +201,10 @@ var Game = /** @class */ (function () {
     };
     return Game;
 }());
-var game = new Game;
+var game = new Game();
 var Ui = /** @class */ (function () {
     function Ui(game) {
+        var _this = this;
         this.game = game;
         this.RESET_BUTTON = document.querySelector("#reset");
         this.PLAY_BUTTON = document.querySelector("#continue");
@@ -213,6 +216,17 @@ var Ui = /** @class */ (function () {
         this.WORD_SCORE_TABLE = document.querySelector("#word-score-table");
         this.createAlphabetButtons();
         this.handleFetchWordButtonClick();
+        // Listener for reset/continue
+        if (this.RESET_BUTTON) {
+            this.RESET_BUTTON.addEventListener("click", function () {
+                _this.game.newGame();
+            });
+        }
+        if (this.PLAY_BUTTON) {
+            this.PLAY_BUTTON.addEventListener("click", function () {
+                _this.game.newGame();
+            });
+        }
     }
     //++
     Ui.prototype.createAlphabetButtons = function () {
