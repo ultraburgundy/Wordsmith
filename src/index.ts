@@ -6,6 +6,7 @@ class Game {
   RANDOM_WORD: string | null;
   ALPHABET: string[];
   
+  
 
   constructor() {
     this.ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
@@ -15,6 +16,7 @@ class Game {
     this.incorrectGuesses = 0;
     this.lettersEnabled = false;
     this.checkForWinner();
+
   }
 
   
@@ -42,6 +44,15 @@ class Game {
         this.SHOW_WORD.style.opacity = "1";
       }, 50);
     }
+  }
+
+  
+  checkForWinner(): boolean {
+    if (this.SHOW_WORD) {
+      const WINNER_CHECKER: string = (this.SHOW_WORD.textContent || "").replace(/\s+/g, "");
+      return WINNER_CHECKER === this.RANDOM_WORD;
+    }
+    return false
   }
 
   //important method for game; defines most of the game logic
@@ -73,7 +84,7 @@ class Game {
       if (ui.ALPHABET_CONTAINER) {
           ui.ALPHABET_CONTAINER.style.display = "none";
       }
-    }
+      }
     ui.displayFireworks();
     if (this.RANDOM_WORD) {
       scores.updateScoreTable(this.RANDOM_WORD);
@@ -108,15 +119,8 @@ class Game {
   }
   }
 
-  checkForWinner(): boolean {
-    if (this.SHOW_WORD) {
-      const WINNER_CHECKER: string = (this.SHOW_WORD.textContent || "").replace(/\s+/g, "");
-      return WINNER_CHECKER === this.RANDOM_WORD;
-    }
-    return false
-  }
 
-  resetGame(): void {
+  newGame(): void {
     this.lettersEnabled = false;
     this.RANDOM_WORD = null;
     this.incorrectGuesses = 0;
@@ -126,6 +130,9 @@ class Game {
     }
     if (ui.SHOW_GUESSES) {
       ui.SHOW_GUESSES.textContent = "";
+    }
+    if (ui.GUESS_CHECKER) {
+      ui.GUESS_CHECKER.textContent = "";
     }
     if (ui.RESET_BUTTON) {
      ui.RESET_BUTTON.setAttribute("hidden", "true");
@@ -148,10 +155,11 @@ class Game {
     if (ui.ALPHABET_CONTAINER) {
       ui.ALPHABET_CONTAINER.style.display = "none";
     }
-    
   }
+
+  
 }
-const game = new Game;
+const game = new Game();
 
 class Ui {
   game: Game;
@@ -178,6 +186,17 @@ class Ui {
     this.WORD_SCORE_TABLE = document.querySelector("#word-score-table");
     this.createAlphabetButtons();
     this.handleFetchWordButtonClick();
+        // Listener for reset/continue
+        if (this.RESET_BUTTON) {
+          this.RESET_BUTTON.addEventListener("click", () => {
+            this.game.newGame();
+             });
+           }
+        if (this.PLAY_BUTTON) {
+             this.PLAY_BUTTON.addEventListener("click", () => {
+               this.game.newGame();
+             });
+           }
     
   }
 
