@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -10,21 +10,34 @@
     <title>Wordsmith</title>
 </head>
 
-<body class="flex items-center justify-center min-h-screen">
+<header>
+    <button id="dark" class="fixed top-0 left-0 p-1 m-4 rounded-lg dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700">    
+        <svg id="dark-mode" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+          </svg>
+          <svg id="light-mode" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hidden w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+        </svg>
+    </button>
+</header>
+
+<body class="flex items-center justify-center min-h-screen bg-slate-200 dark:bg-slate-800">
+   
+    
     <div class="text-center">
         <div>
             <button id="word-button">
                 <img src="./assets/images/question_mark.gif">
             </button>
-    <p id="win-lose-check" class="p-4 mt-4 text-4xl"></p>
+    <p id="win-lose-check" class="p-4 mt-4 text-4xl dark:text-slate-400"></p>
         <div id="table-container" class="relative overflow-x-auto"></div>
-            <table id="word-score-table" class="hidden w-full m-auto text-sm border shadow-md "> 
+            <table id="word-score-table" class="hidden w-full m-auto text-sm border shadow-md dark:text-slate-400"> 
                 <caption id="table-caption"></caption>  
-                    <thead class="text-xs uppercase">
-                        <tr>
-                            <th scope="col" class="px-6 py-1 bg-red-50">Word</th>
-                            <th scope="col" class="px-6 py-1">Score</th>
-                            <th scope="col" class="px-6 py-1 bg-red-50">Total Score</th>
+                    <thead class="text-xs uppercase dark:text-slate-400">
+                        <tr class="dark:text-slate-400">
+                            <th scope="col" class="px-6 py-1 bg-red-50 dark:text-slate-400 dark:bg-slate-600">Word</th>
+                            <th scope="col" class="px-6 py-1 dark:text-slate-400">Score</th>
+                            <th scope="col" class="px-6 py-1 bg-red-50 dark:bg-slate-600">Total Score</th>
                         </tr>
                     </thead>
                 <tbody>
@@ -32,17 +45,18 @@
             </table>
         </div>
         <div id="fireworks-container"></div>
-            <p id="word-output" class="text-4xl text-center transition duration-1000 ease-in-out opacity-0"></p>
+            <p id="word-output" class="text-4xl text-center transition duration-1000 ease-in-out opacity-0 dark:text-slate-400"></p>
                 <button id ="continue" hidden class="text-4xl">
                     ▶
                 </button>
                 <button id="reset" hidden class="m-4 text-4xl">
                     🔁
                 </button>
-    <p id="attemptsOutput" class="mt-6 transition ease-in "></p>
-        <div id="alphabet" class="font-medium text-center alphabet-container"></div>
+    <p id="attemptsOutput" class="mt-6 transition ease-in dark:text-slate-400 "></p>
+        <div id="alphabet" class="font-medium text-center alphabet-container dark:text-slate-400"></div>
         
     </div>
-<script src="index.js" type="module"></script>
+
+<script src="index.js"></script>
 </body>
 </html>

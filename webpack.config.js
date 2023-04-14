@@ -10,6 +10,9 @@ module.exports = {
         clean: true,
         assetModuleFilename: "[name][ext]",
     },
+    resolve: {
+        extensions: [ ".ts", ".js", ".tsx"],
+    },
     devtool: "source-map",
     module: {
         rules: [
@@ -24,6 +27,7 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
+                exclude: /node_modules/,
            
               },
         ],
