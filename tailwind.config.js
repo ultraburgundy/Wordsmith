@@ -1,6 +1,6 @@
 /** @type {import("tailwindcss").Config} */
 module.exports = {
-  content: ["./dist/*.html"],
+  content: ["./docs/*.html"],
   theme: {
     fontFamily: {
       "cutive": ["Cutive Mono"],
@@ -14,5 +14,6 @@ module.exports = {
       "2xl": "1536px",
     }
   },
+  darkMode: "class",
   plugins: [],
 }

@@ -1,3 +1,7 @@
+import { Dark } from "./utils/utils";
+
+const dark = new Dark();
+
 class Game {
   lettersEnabled: boolean;
   incorrectGuesses: number;
