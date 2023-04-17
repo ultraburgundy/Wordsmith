@@ -574,12 +574,12 @@ video {
   min-height: 100vh;
 }
 
-.w-full{
-  width: 100%;
-}
-
 .w-6{
   width: 1.5rem;
+}
+
+.w-full{
+  width: 100%;
 }
 
 .items-center{
@@ -612,12 +612,12 @@ video {
   background-color: rgb(226 232 240 / var(--tw-bg-opacity));
 }
 
-.p-4{
-  padding: 1rem;
-}
-
 .p-1{
   padding: 0.25rem;
+}
+
+.p-4{
+  padding: 1rem;
 }
 
 .px-6{
