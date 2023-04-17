@@ -1,4 +1,5 @@
 "use strict";
+/* leaderboard/continuance has been removed for now, so commented out those features */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -83,7 +84,7 @@ var Game = /** @class */ (function () {
                         return [4 /*yield*/, this.fetchRandomWord()];
                     case 1:
                         _a.RANDOM_WORD = _b.sent();
-                        HIDDEN_ARRAY = new Array(this.RANDOM_WORD.length).fill("❓ ");
+                        HIDDEN_ARRAY = new Array(this.RANDOM_WORD.length).fill("❔ ");
                         HIDDEN_WORD = HIDDEN_ARRAY.join("");
                         if (this.SHOW_WORD) {
                             this.SHOW_WORD.textContent = HIDDEN_WORD;
@@ -120,11 +121,12 @@ var Game = /** @class */ (function () {
                     ui.SHOW_GUESSES.textContent = "";
                 }
                 if (ui.GUESS_CHECKER && this.RANDOM_WORD) {
-                    ui.GUESS_CHECKER.textContent = "WINNER! You guessed the word \"".concat(this.RANDOM_WORD, "\"!");
+                    ui.GUESS_CHECKER_IMAGE.innerHTML = "<img src=\"./assets/images/winner.gif\">";
+                    ui.GUESS_CHECKER.textContent = "You guessed the word \"".concat(this.RANDOM_WORD, "\"!");
                 }
-                if (ui.PLAY_BUTTON) {
-                    ui.PLAY_BUTTON.removeAttribute("hidden");
-                }
+                /*if (ui.PLAY_BUTTON) {
+                  ui.PLAY_BUTTON.removeAttribute("hidden");
+                }*/
                 if (ui.RESET_BUTTON) {
                     ui.RESET_BUTTON.removeAttribute("hidden");
                     if (this.SHOW_WORD) {
@@ -135,9 +137,11 @@ var Game = /** @class */ (function () {
                     }
                 }
                 ui.displayFireworks();
+                /*
                 if (this.RANDOM_WORD) {
-                    scores.updateScoreTable(this.RANDOM_WORD);
+                  scores.updateScoreTable(this.RANDOM_WORD);
                 }
+                */
             }
         }
         else {
@@ -151,7 +155,8 @@ var Game = /** @class */ (function () {
             if (MAX_INCORRECT_GUESSES === 0) {
                 this.incorrectGuesses--;
                 if (ui.GUESS_CHECKER && this.RANDOM_WORD) {
-                    ui.GUESS_CHECKER.textContent = "Game over! Word was \"".concat(this.RANDOM_WORD, "\"");
+                    ui.GUESS_CHECKER_IMAGE.innerHTML = "<img src=\"./assets/images/loser.gif\">";
+                    ui.GUESS_CHECKER.textContent = "Word was \"".concat(this.RANDOM_WORD, "\"");
                 }
                 if (ui.RESET_BUTTON) {
                     ui.RESET_BUTTON.removeAttribute("hidden");
@@ -178,15 +183,18 @@ var Game = /** @class */ (function () {
         if (ui.SHOW_GUESSES) {
             ui.SHOW_GUESSES.textContent = "";
         }
+        if (ui.GUESS_CHECKER_IMAGE) {
+            ui.GUESS_CHECKER_IMAGE.innerHTML = "";
+        }
         if (ui.GUESS_CHECKER) {
             ui.GUESS_CHECKER.textContent = "";
         }
         if (ui.RESET_BUTTON) {
             ui.RESET_BUTTON.setAttribute("hidden", "true");
         }
-        if (ui.PLAY_BUTTON) {
-            ui.PLAY_BUTTON.setAttribute("hidden", "true");
-        }
+        /*if (ui.PLAY_BUTTON) {
+          ui.PLAY_BUTTON.setAttribute("hidden", "true");
+        }*/
         if (ui.WORD_SCORE_TABLE) {
             ui.WORD_SCORE_TABLE.classList.add("hidden");
         }
@@ -211,10 +219,11 @@ var Ui = /** @class */ (function () {
         var _this = this;
         this.game = game;
         this.RESET_BUTTON = document.querySelector("#reset");
-        this.PLAY_BUTTON = document.querySelector("#continue");
+        //this.PLAY_BUTTON = document.querySelector("#continue");
         this.FETCH_WORD_BUTTON = document.querySelector("#word-button");
         this.SHOW_GUESSES = document.querySelector("#attemptsOutput");
         this.GUESS_CHECKER = document.querySelector("#win-lose-check");
+        this.GUESS_CHECKER_IMAGE = document.querySelector("#win-title");
         this.ALPHABET_CONTAINER = document.querySelector("#alphabet");
         this.FIREWORKS_CONTAINER = document.querySelector("#fireworks-container");
         this.WORD_SCORE_TABLE = document.querySelector("#word-score-table");
@@ -226,13 +235,12 @@ var Ui = /** @class */ (function () {
                 _this.game.newGame();
             });
         }
-        if (this.PLAY_BUTTON) {
-            this.PLAY_BUTTON.addEventListener("click", function () {
-                _this.game.newGame();
-            });
-        }
+        /* if (this.PLAY_BUTTON) {
+              this.PLAY_BUTTON.addEventListener("click", () => {
+                this.game.newGame();
+              });
+            }*/
     }
-    //++
     Ui.prototype.createAlphabetButtons = function () {
         for (var _i = 0, _a = game.ALPHABET; _i < _a.length; _i++) {
             var letter = _a[_i];
@@ -297,23 +305,29 @@ var Ui = /** @class */ (function () {
     return Ui;
 }());
 var ui = new Ui(game);
-var Scores = /** @class */ (function () {
-    function Scores(game) {
-        this.game = game;
-    }
-    Scores.prototype.updateScoreTable = function (word) {
-        var WORD_SCORE = word.length * 10;
-        var TOTAL_SCORE = game.currentScore += WORD_SCORE;
-        var ROW = ui.WORD_SCORE_TABLE.insertRow();
-        var WORD_CELL = ROW.insertCell(0);
-        var SCORE_CELL = ROW.insertCell(1);
-        WORD_CELL.textContent = word;
-        SCORE_CELL.textContent = WORD_SCORE.toString();
-        if (ui.PLAY_BUTTON) {
-            var TOTAL_SCORE_CELL = ROW.insertCell(2);
-            TOTAL_SCORE_CELL.textContent = TOTAL_SCORE.toString();
-        }
-    };
-    return Scores;
-}());
-var scores = new Scores(game);
+/* (When I figure out in-depth score stuff)
+class Scores {
+  game: Game;
+
+  constructor(game: Game) {
+    this.game = game;
+  }
+
+  updateScoreTable(word: string): void {
+    const WORD_SCORE: number = word.length * 10;
+    const TOTAL_SCORE: number = game.currentScore += WORD_SCORE;
+  
+    const ROW: HTMLTableRowElement = ui.WORD_SCORE_TABLE.insertRow();
+    const WORD_CELL: HTMLTableCellElement = ROW.insertCell(0);
+    const SCORE_CELL: HTMLTableCellElement = ROW.insertCell(1);
+
+    WORD_CELL.textContent = word;
+    SCORE_CELL.textContent = WORD_SCORE.toString();
+    
+   if (ui.PLAY_BUTTON) {
+    const TOTAL_SCORE_CELL: HTMLTableCellElement = ROW.insertCell(2);
+    TOTAL_SCORE_CELL.textContent = TOTAL_SCORE.toString();
+   }
+  }
+}
+const scores = new Scores(game);*/ 
