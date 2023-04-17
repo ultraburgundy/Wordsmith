@@ -11,6 +11,7 @@
 </head>
 
 <header>
+
     <button id="dark" class="fixed top-0 left-0 p-1 m-4 rounded-lg dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700">    
         <svg id="dark-mode" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
@@ -27,34 +28,37 @@
     <div class="text-center">
         <div>
             <button id="word-button">
-                <img src="./assets/images/question_mark.gif">
-            </button>
-    <p id="win-lose-check" class="p-4 mt-4 text-4xl dark:text-slate-400"></p>
+                <img src="./assets/images/question_mark.gif"> </button>
+   
+    <p id="win-title" class="p-4 m-4 text-6xl dark:text-slate-400"></p>
+
+    <!--
+    <button id ="continue" hidden class="px-5 py-2.5 font-bold text-center text-sm mb-4 border-2 rounded-lg h-10 w-15 border-slate-950 hover:bg-slate-400  dark:border-slate-400 text-slate-950 dark:text-slate-400 dark:hover:text-slate-400  dark:hover:bg-slate-600"> continue
+    </button> -->
+    <button id="reset" hidden class="px-5 py-2.5 font-bold text-center text-sm mb-4 border-2 rounded-lg h-10 w-15 border-slate-950  hover:bg-slate-400  dark:border-slate-400 text-slate-950 dark:text-slate-400 dark:hover:text-slate-400  dark:hover:bg-slate-600"> play again                                      
+    </button>
+    <p id="win-lose-check" class="p-4 mt-4 text-4xl transform dark:text-slate-400"></p>
+  
+       <!-- I'll use this again, at some point.
         <div id="table-container" class="relative overflow-x-auto"></div>
-            <table id="word-score-table" class="hidden w-full m-auto text-sm border shadow-md dark:text-slate-400"> 
+            <table id="word-score-table" class="hidden w-3/4 m-auto text-sm border shadow-md dark:text-slate-400"> 
                 <caption id="table-caption"></caption>  
                     <thead class="text-xs uppercase dark:text-slate-400">
                         <tr class="dark:text-slate-400">
-                            <th scope="col" class="px-6 py-1 bg-red-50 dark:text-slate-400 dark:bg-slate-600">Word</th>
-                            <th scope="col" class="px-6 py-1 dark:text-slate-400">Score</th>
-                            <th scope="col" class="px-6 py-1 bg-red-50 dark:bg-slate-600">Total Score</th>
+                            <th scope="col" class="px-6 py-1 bg-slate-400 dark:bg-slate-600">Word</th>
+                            <th scope="col" class="px-6 py-1 bg-slate-400 dark:bg-slate-600 ">Score</th>
+                            <th scope="col" class="px-6 py-1 bg-slate-400 dark:bg-slate-600">Total Score</th>
                         </tr>
                     </thead>
                 <tbody>
                 </tbody>
             </table>
-        </div>
-        <div id="fireworks-container"></div>
-            <p id="word-output" class="text-4xl text-center transition duration-1000 ease-in-out opacity-0 dark:text-slate-400"></p>
-                <button id ="continue" hidden class="text-4xl">
-                    ▶
-                </button>
-                <button id="reset" hidden class="m-4 text-4xl">
-                    🔁
-                </button>
-    <p id="attemptsOutput" class="mt-6 transition ease-in dark:text-slate-400 "></p>
-        <div id="alphabet" class="font-medium text-center alphabet-container dark:text-slate-400"></div>
+        </div> -->
         
+    <div id="fireworks-container"></div>
+    <p id="word-output" class="text-4xl text-center transition duration-1000 ease-in-out opacity-0 dark:text-slate-400"></p>       
+    <p id="attemptsOutput" class="mt-6 transition ease-in dark:text-slate-400 "></p>
+    <div id="alphabet" class="flex flex-wrap justify-center font-medium text-center alphabet-container dark:text-slate-400"></div>   
     </div>
 
 <script src="index.js"></script>

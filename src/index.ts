@@ -1,3 +1,6 @@
+/* leaderboard/continuance has been removed for now, so commented out those features */
+
+
 import { Dark } from "./utils/utils";
 
 const dark = new Dark();
@@ -39,7 +42,7 @@ class Game {
   async selectRandomWord(): Promise<void> {
     this.lettersEnabled = true;
     this.RANDOM_WORD = await this.fetchRandomWord();
-    const HIDDEN_ARRAY: string[] = new Array(this.RANDOM_WORD.length).fill("❓ ");
+    const HIDDEN_ARRAY: string[] = new Array(this.RANDOM_WORD.length).fill("❔ ");
     const HIDDEN_WORD: string = HIDDEN_ARRAY.join("");
     if(this.SHOW_WORD) {
       this.SHOW_WORD.textContent = HIDDEN_WORD;
@@ -75,11 +78,12 @@ class Game {
          ui.SHOW_GUESSES.textContent = "";
       }
       if (ui.GUESS_CHECKER && this.RANDOM_WORD) {
-          ui.GUESS_CHECKER.textContent = `WINNER! You guessed the word "${this.RANDOM_WORD}"!`;
+        ui.GUESS_CHECKER_IMAGE.innerHTML =`<img src="./assets/images/winner.gif">`
+          ui.GUESS_CHECKER.textContent = `You guessed the word "${this.RANDOM_WORD}"!`;
       }
-      if (ui.PLAY_BUTTON) {
+      /*if (ui.PLAY_BUTTON) {
         ui.PLAY_BUTTON.removeAttribute("hidden");
-      }
+      }*/
       if (ui.RESET_BUTTON) {
           ui.RESET_BUTTON.removeAttribute("hidden");
       if (this.SHOW_WORD) {
@@ -90,9 +94,11 @@ class Game {
       }
       }
     ui.displayFireworks();
+    /* 
     if (this.RANDOM_WORD) {
       scores.updateScoreTable(this.RANDOM_WORD);
     }
+    */
   }
     } else {
       this.incorrectGuesses++;
@@ -105,7 +111,8 @@ class Game {
     if (MAX_INCORRECT_GUESSES === 0) {
       this.incorrectGuesses--;
       if (ui.GUESS_CHECKER && this.RANDOM_WORD) {
-        ui.GUESS_CHECKER.textContent = `Game over! Word was "${this.RANDOM_WORD}"`;
+        ui.GUESS_CHECKER_IMAGE.innerHTML = `<img src="./assets/images/loser.gif">`
+        ui.GUESS_CHECKER.textContent = `Word was "${this.RANDOM_WORD}"`;
       }
       if (ui.RESET_BUTTON) {
         ui.RESET_BUTTON.removeAttribute("hidden");
@@ -135,15 +142,18 @@ class Game {
     if (ui.SHOW_GUESSES) {
       ui.SHOW_GUESSES.textContent = "";
     }
+    if (ui.GUESS_CHECKER_IMAGE) {
+      ui.GUESS_CHECKER_IMAGE.innerHTML = "";
+    }
     if (ui.GUESS_CHECKER) {
       ui.GUESS_CHECKER.textContent = "";
     }
     if (ui.RESET_BUTTON) {
      ui.RESET_BUTTON.setAttribute("hidden", "true");
     }
-    if (ui.PLAY_BUTTON) {
+    /*if (ui.PLAY_BUTTON) {
       ui.PLAY_BUTTON.setAttribute("hidden", "true");
-    } 
+    }*/ 
     if (ui.WORD_SCORE_TABLE) {
       ui.WORD_SCORE_TABLE.classList.add("hidden");
     }
@@ -168,9 +178,10 @@ const game = new Game();
 class Ui {
   game: Game;
   RESET_BUTTON: HTMLButtonElement | null;
-  PLAY_BUTTON: HTMLButtonElement | null;
+  //PLAY_BUTTON: HTMLButtonElement | null;
   FETCH_WORD_BUTTON: HTMLButtonElement | null;
   SHOW_GUESSES: HTMLElement | null;
+  GUESS_CHECKER_IMAGE: HTMLElement | null;
   GUESS_CHECKER: HTMLElement | null;
   ALPHABET_CONTAINER: HTMLDivElement | null;
   FIREWORKS_CONTAINER: HTMLElement | null;
@@ -181,12 +192,13 @@ class Ui {
   constructor(game: Game) {
     this.game = game;
     this.RESET_BUTTON = document.querySelector("#reset");
-    this.PLAY_BUTTON = document.querySelector("#continue");
+    //this.PLAY_BUTTON = document.querySelector("#continue");
     this.FETCH_WORD_BUTTON = document.querySelector("#word-button");
     this.SHOW_GUESSES = document.querySelector("#attemptsOutput");
     this.GUESS_CHECKER = document.querySelector("#win-lose-check");
+    this.GUESS_CHECKER_IMAGE = document.querySelector("#win-title");
     this.ALPHABET_CONTAINER = document.querySelector("#alphabet");
-    this.FIREWORKS_CONTAINER = document.querySelector("#fireworks-container")
+    this.FIREWORKS_CONTAINER = document.querySelector("#fireworks-container");
     this.WORD_SCORE_TABLE = document.querySelector("#word-score-table");
     this.createAlphabetButtons();
     this.handleFetchWordButtonClick();
@@ -196,15 +208,15 @@ class Ui {
             this.game.newGame();
              });
            }
-        if (this.PLAY_BUTTON) {
+       /* if (this.PLAY_BUTTON) {
              this.PLAY_BUTTON.addEventListener("click", () => {
                this.game.newGame();
              });
-           }
+           }*/
     
   }
 
-//++
+
  createAlphabetButtons(): void {
   for (const letter of game.ALPHABET) {
     //makes each letter into li element
@@ -270,6 +282,11 @@ storeLetterClick(ALPHABET_LETTER: HTMLElement): void {
 }
 const ui = new Ui(game);
 
+
+
+
+
+/* (When I figure out in-depth score stuff)
 class Scores {
   game: Game;
 
@@ -294,4 +311,4 @@ class Scores {
    }
   }
 }
-const scores = new Scores(game);
+const scores = new Scores(game);*/
