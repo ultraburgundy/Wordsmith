@@ -2,20 +2,6 @@
 
 Wordsmith is my first beginner project as a front-end developer, and it is a word-guessing game that challenges players to guess a random word within a certain number of guesses.
 
-v1.1
-better readability
-removed the category-specific code since will be using an API to fetch words
-fixed minor bugs
-removed unnecessary classes
-tailwindCSS is now incorporated
-
-v1.2
-adjusted/improved styling
-typescript compiling
-score table has been added
-
-v1.2.1
-adjusted typescript file for better maintainability.
 
 FUTURE-TO-DO (v1.3)
 > add player name input
