@@ -1,6 +1,7 @@
 /** @type {import("tailwindcss").Config} */
 module.exports = {
   content: ["./docs/*.html"],
+  //important: true,
   theme: {
     fontFamily: {
       "cutive": ["Cutive Mono"],

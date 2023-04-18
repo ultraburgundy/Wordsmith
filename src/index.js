@@ -198,8 +198,14 @@ var Game = /** @class */ (function () {
         if (ui.WORD_SCORE_TABLE) {
             ui.WORD_SCORE_TABLE.classList.add("hidden");
         }
-        if (ui.FETCH_WORD_BUTTON) {
-            ui.FETCH_WORD_BUTTON.style.display = "";
+        if (ui.QUESTION_MARK) {
+            ui.QUESTION_MARK.style.display = "";
+        }
+        if (ui.HOW_TO_PLAY_BUTTON) {
+            ui.HOW_TO_PLAY_BUTTON.classList.remove("hidden");
+        }
+        if (ui.PLAY_BUTTON) {
+            ui.PLAY_BUTTON.style.display = "";
         }
         if (ui.FIREWORKS_CONTAINER)
             ui.FIREWORKS_CONTAINER.innerHTML = "";
@@ -220,15 +226,20 @@ var Ui = /** @class */ (function () {
         this.game = game;
         this.RESET_BUTTON = document.querySelector("#reset");
         //this.PLAY_BUTTON = document.querySelector("#continue");
-        this.FETCH_WORD_BUTTON = document.querySelector("#word-button");
+        this.PLAY_BUTTON = document.querySelector("#play-button");
         this.SHOW_GUESSES = document.querySelector("#attemptsOutput");
         this.GUESS_CHECKER = document.querySelector("#win-lose-check");
         this.GUESS_CHECKER_IMAGE = document.querySelector("#win-title");
         this.ALPHABET_CONTAINER = document.querySelector("#alphabet");
         this.FIREWORKS_CONTAINER = document.querySelector("#fireworks-container");
         this.WORD_SCORE_TABLE = document.querySelector("#word-score-table");
+        this.HOW_TO_PLAY_BUTTON = document.querySelector("#how-to-play-button");
+        this.HOW_TO_PLAY = document.querySelector("#how-to-play");
+        this.QUESTION_MARK = document.querySelector("#question-mark");
         this.createAlphabetButtons();
         this.handleFetchWordButtonClick();
+        this.howToPlayButton();
+        this.handleKeyDown();
         // Listener for reset/continue
         if (this.RESET_BUTTON) {
             this.RESET_BUTTON.addEventListener("click", function () {
@@ -247,22 +258,47 @@ var Ui = /** @class */ (function () {
             //makes each letter into li element
             var ALPHABET_LETTER = document.createElement('li');
             ALPHABET_LETTER.textContent = letter;
+            //select based on the letter value
+            ALPHABET_LETTER.setAttribute("data-letter", letter);
             this.ALPHABET_CONTAINER.appendChild(ALPHABET_LETTER);
             this.storeLetterClick(ALPHABET_LETTER);
         }
     };
-    //event listener for ? mark button
+    //event listener for play button
     Ui.prototype.handleFetchWordButtonClick = function () {
         var _this = this;
-        if (this.FETCH_WORD_BUTTON) {
-            this.FETCH_WORD_BUTTON.addEventListener("click", function () {
-                if (_this.FETCH_WORD_BUTTON) {
-                    _this.FETCH_WORD_BUTTON.style.display = "none";
+        if (this.PLAY_BUTTON) {
+            this.PLAY_BUTTON.addEventListener("click", function () {
+                if (_this.PLAY_BUTTON) {
+                    _this.PLAY_BUTTON.style.display = "none";
                 }
                 if (_this.ALPHABET_CONTAINER) {
-                    _this.ALPHABET_CONTAINER.style.display = "flex";
+                    _this.ALPHABET_CONTAINER.style.display = "grid";
+                }
+                if (_this.HOW_TO_PLAY_BUTTON) {
+                    _this.HOW_TO_PLAY_BUTTON.style.display = "none";
+                }
+                if (_this.HOW_TO_PLAY) {
+                    _this.HOW_TO_PLAY.classList.add("hidden");
+                }
+                if (_this.QUESTION_MARK) {
+                    _this.QUESTION_MARK.style.display = "none";
                 }
                 game.selectRandomWord();
+            });
+        }
+    };
+    //event listener for how to play button
+    Ui.prototype.howToPlayButton = function () {
+        var _this = this;
+        if (this.HOW_TO_PLAY_BUTTON) {
+            this.HOW_TO_PLAY_BUTTON.addEventListener("click", function () {
+                if (_this.HOW_TO_PLAY_BUTTON) {
+                    _this.HOW_TO_PLAY_BUTTON.style.display = "none";
+                }
+                if (_this.HOW_TO_PLAY) {
+                    _this.HOW_TO_PLAY.classList.remove("hidden");
+                }
             });
         }
     };
@@ -279,6 +315,25 @@ var Ui = /** @class */ (function () {
                             LETTER_POSITION.push(i);
                         }
                     }
+                    game.handleLetterClick(target, LETTER_POSITION);
+                }
+            }
+        });
+    };
+    //keyboard event listener
+    Ui.prototype.handleKeyDown = function () {
+        window.addEventListener("keydown", function (event) {
+            var key = event.key.toLowerCase();
+            if (game.RANDOM_WORD && game.lettersEnabled && game.ALPHABET.includes(key)) {
+                var target = document.querySelector("li[data-letter=\"".concat(key, "\"]:not(.used)"));
+                if (target) {
+                    var LETTER_POSITION = [];
+                    for (var i = 0; i < game.RANDOM_WORD.length; i++) {
+                        if (game.RANDOM_WORD[i] === key) {
+                            LETTER_POSITION.push(i);
+                        }
+                    }
+                    target.classList.add("used");
                     game.handleLetterClick(target, LETTER_POSITION);
                 }
             }

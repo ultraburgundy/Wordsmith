@@ -530,6 +530,10 @@ video {
   top: 0px;
 }
 
+.\!m-auto{
+  margin: auto !important;
+}
+
 .m-4{
   margin: 1rem;
 }
@@ -566,12 +570,26 @@ video {
   min-height: 100vh;
 }
 
+.\!w-1\/2{
+  width: 50% !important;
+}
+
 .w-6{
   width: 1.5rem;
 }
 
 .transform{
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+@keyframes pulse{
+  50%{
+    opacity: .5;
+  }
+}
+
+.animate-pulse{
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .flex-wrap{
@@ -584,6 +602,10 @@ video {
 
 .justify-center{
   justify-content: center;
+}
+
+.break-words{
+  overflow-wrap: break-word;
 }
 
 .rounded-lg{
@@ -646,6 +668,11 @@ video {
   line-height: 1.25rem;
 }
 
+.text-2xl{
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
 .font-bold{
   font-weight: 700;
 }
@@ -703,8 +730,10 @@ img {
 
 #alphabet {
   display: none;
-  flex-wrap: wrap;
-  width: 500px;
+  grid-template-columns: repeat(13, 1fr);
+  gap: 1rem;
+  width: 90%;
+  max-width: 500px;
   margin: 2rem auto;
 }
 
@@ -741,6 +770,19 @@ img {
   transform: translateY(-4px);
 }
 
+@media (max-width: 640px) {
+  #alphabet {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  #alphabet li {
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    font-size: 1.2rem;
+  }
+}
+
 .fireworks {
   width: 50%;
   height: auto;
@@ -773,9 +815,9 @@ table tr {
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
-.focus\:ring-gray-200:focus{
+.focus\:ring-slate-950:focus{
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(229 231 235 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(2 6 23 / var(--tw-ring-opacity));
 }
 
 :is(.dark .dark\:border-slate-400){
@@ -786,11 +828,6 @@ table tr {
 :is(.dark .dark\:bg-slate-800){
   --tw-bg-opacity: 1;
   background-color: rgb(30 41 59 / var(--tw-bg-opacity));
-}
-
-:is(.dark .dark\:text-gray-400){
-  --tw-text-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 
 :is(.dark .dark\:text-slate-400){
@@ -808,9 +845,16 @@ table tr {
   color: rgb(148 163 184 / var(--tw-text-opacity));
 }
 
-:is(.dark .dark\:focus\:ring-gray-700:focus){
+:is(.dark .dark\:focus\:ring-gray-600:focus){
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(55 65 81 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(75 85 99 / var(--tw-ring-opacity));
+}
+
+@media (min-width: 640px){
+  .sm\:text-sm{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
 }
 
 

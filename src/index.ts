@@ -157,8 +157,14 @@ class Game {
     if (ui.WORD_SCORE_TABLE) {
       ui.WORD_SCORE_TABLE.classList.add("hidden");
     }
-    if (ui.FETCH_WORD_BUTTON) {
-      ui.FETCH_WORD_BUTTON.style.display = "";
+    if (ui.QUESTION_MARK) {
+      ui.QUESTION_MARK.style.display = "";
+    }
+    if (ui.HOW_TO_PLAY_BUTTON) {
+      ui.HOW_TO_PLAY_BUTTON.classList.remove("hidden");
+    }
+    if (ui.PLAY_BUTTON) {
+      ui.PLAY_BUTTON.style.display = "";
     }
     if (ui.FIREWORKS_CONTAINER) 
       ui.FIREWORKS_CONTAINER.innerHTML = "";
@@ -179,29 +185,36 @@ class Ui {
   game: Game;
   RESET_BUTTON: HTMLButtonElement | null;
   //PLAY_BUTTON: HTMLButtonElement | null;
-  FETCH_WORD_BUTTON: HTMLButtonElement | null;
+  PLAY_BUTTON: HTMLButtonElement | null;
   SHOW_GUESSES: HTMLElement | null;
   GUESS_CHECKER_IMAGE: HTMLElement | null;
   GUESS_CHECKER: HTMLElement | null;
   ALPHABET_CONTAINER: HTMLDivElement | null;
   FIREWORKS_CONTAINER: HTMLElement | null;
   WORD_SCORE_TABLE: HTMLTableElement | null;
-
+  HOW_TO_PLAY_BUTTON: HTMLButtonElement | null;
+  HOW_TO_PLAY: HTMLElement | null;
+  QUESTION_MARK: HTMLImageElement | null;
 
 
   constructor(game: Game) {
     this.game = game;
     this.RESET_BUTTON = document.querySelector("#reset");
     //this.PLAY_BUTTON = document.querySelector("#continue");
-    this.FETCH_WORD_BUTTON = document.querySelector("#word-button");
+    this.PLAY_BUTTON = document.querySelector("#play-button");
     this.SHOW_GUESSES = document.querySelector("#attemptsOutput");
     this.GUESS_CHECKER = document.querySelector("#win-lose-check");
     this.GUESS_CHECKER_IMAGE = document.querySelector("#win-title");
     this.ALPHABET_CONTAINER = document.querySelector("#alphabet");
     this.FIREWORKS_CONTAINER = document.querySelector("#fireworks-container");
     this.WORD_SCORE_TABLE = document.querySelector("#word-score-table");
+    this.HOW_TO_PLAY_BUTTON = document.querySelector("#how-to-play-button");
+    this.HOW_TO_PLAY = document.querySelector("#how-to-play");
+    this.QUESTION_MARK = document.querySelector("#question-mark");
     this.createAlphabetButtons();
     this.handleFetchWordButtonClick();
+    this.howToPlayButton();
+    this.handleKeyDown();
         // Listener for reset/continue
         if (this.RESET_BUTTON) {
           this.RESET_BUTTON.addEventListener("click", () => {
@@ -222,31 +235,56 @@ class Ui {
     //makes each letter into li element
     const ALPHABET_LETTER: HTMLLIElement = document.createElement('li');
     ALPHABET_LETTER.textContent = letter;
+    //select based on the letter value
+    ALPHABET_LETTER.setAttribute("data-letter", letter);
     this.ALPHABET_CONTAINER.appendChild(ALPHABET_LETTER);
     this.storeLetterClick(ALPHABET_LETTER);
   }
   
 }
 
-//event listener for ? mark button
+//event listener for play button
   handleFetchWordButtonClick(): void {
-  if (this.FETCH_WORD_BUTTON) {
-    this.FETCH_WORD_BUTTON.addEventListener("click", () => {
-      if (this.FETCH_WORD_BUTTON) {
-        this.FETCH_WORD_BUTTON.style.display = "none";
+  if (this.PLAY_BUTTON) {
+    this.PLAY_BUTTON.addEventListener("click", () => {
+      if (this.PLAY_BUTTON) {
+        this.PLAY_BUTTON.style.display = "none";
       }
       if (this.ALPHABET_CONTAINER) {
-        this.ALPHABET_CONTAINER.style.display = "flex";
+        this.ALPHABET_CONTAINER.style.display = "grid";
+      }
+      if (this.HOW_TO_PLAY_BUTTON) {
+        this.HOW_TO_PLAY_BUTTON.style.display = "none";
+      }
+      if (this.HOW_TO_PLAY) {
+        this.HOW_TO_PLAY.classList.add("hidden");
+      }
+      if (this.QUESTION_MARK) {
+        this.QUESTION_MARK.style.display = "none";
       }
       game.selectRandomWord();
     });
   }
 }
+
+//event listener for how to play button
+  howToPlayButton(): void {
+    if(this.HOW_TO_PLAY_BUTTON) {
+      this.HOW_TO_PLAY_BUTTON.addEventListener("click", () => {
+        if (this.HOW_TO_PLAY_BUTTON) {
+          this.HOW_TO_PLAY_BUTTON.style.display = "none";
+        }
+        if (this.HOW_TO_PLAY) {
+          this.HOW_TO_PLAY.classList.remove("hidden");
+        }   
+      })
+    }
+  }
 //event listener to iterate thru random word to find clicked letter; stores position in LETTER_POSITION
 storeLetterClick(ALPHABET_LETTER: HTMLElement): void {
   ALPHABET_LETTER.addEventListener("click", (event: MouseEvent) => {
      if (game.RANDOM_WORD && game.lettersEnabled) {
-       const target = event.target as HTMLElement;
+       let target = event.target as HTMLElement;
        if (target.tagName.toLowerCase() === "li" && target as HTMLElement) {
          const CLICKED_LETTERS: string = target.textContent || "";
          const LETTER_POSITION: number[] = [];
@@ -259,6 +297,26 @@ storeLetterClick(ALPHABET_LETTER: HTMLElement): void {
        }
      }
    });
+ }
+
+ //keyboard event listener
+ handleKeyDown(): void {
+  window.addEventListener("keydown", (event: KeyboardEvent) => {
+    const key = event.key.toLowerCase();
+    if (game.RANDOM_WORD && game.lettersEnabled && game.ALPHABET.includes(key)) {
+      let target = document.querySelector(`li[data-letter="${key}"]:not(.used)`) as HTMLElement;
+      if (target) {
+        const LETTER_POSITION: number[] = [];
+        for (let i = 0; i < game.RANDOM_WORD.length; i++) {
+          if (game.RANDOM_WORD[i] === key) {
+            LETTER_POSITION.push(i);
+          }
+        }
+        target.classList.add("used");
+        game.handleLetterClick(target, LETTER_POSITION);
+      }
+    }
+  });
  }
 
   displayFireworks(): void {
