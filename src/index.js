@@ -1,5 +1,4 @@
 "use strict";
-/* leaderboard/continuance has been removed for now, so commented out those features */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,35 +37,65 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var utils_1 = require("./utils/utils");
+require("flowbite");
 var dark = new utils_1.Dark();
 var Game = /** @class */ (function () {
     function Game() {
         this.ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
         this.RANDOM_WORD = null;
         this.SHOW_WORD = document.querySelector("#word-output");
+        this.SHOW_DEFINITION = document.querySelector("#word-definition");
+        this.WORD_DEFINITION = null;
         this.currentScore = 0;
         this.incorrectGuesses = 0;
         this.lettersEnabled = false;
+        this.keydownListener = true;
         this.checkForWinner();
     }
     Game.prototype.fetchRandomWord = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var RESPONSE, WORD_ARRAY, error_1;
+            var response, words, randomWord, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, fetch("https://random-word-api.herokuapp.com/word")];
+                        return [4 /*yield*/, fetch("https://api.datamuse.com/words?sp=*")];
                     case 1:
-                        RESPONSE = _a.sent();
-                        return [4 /*yield*/, RESPONSE.json()];
+                        response = _a.sent();
+                        return [4 /*yield*/, response.json()];
                     case 2:
-                        WORD_ARRAY = _a.sent();
-                        return [2 /*return*/, WORD_ARRAY[0]];
+                        words = _a.sent();
+                        randomWord = words[Math.floor(Math.random() * words.length)].word;
+                        return [2 /*return*/, randomWord];
                     case 3:
                         error_1 = _a.sent();
                         console.error("Error fetching random word:", error_1);
                         return [2 /*return*/, ""];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Game.prototype.fetchWordDefinition = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, data, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, fetch("https://api.datamuse.com/words?sp=".concat(this.RANDOM_WORD, "&md=d"))];
+                    case 1:
+                        response = _a.sent();
+                        return [4 /*yield*/, response.json()];
+                    case 2:
+                        data = _a.sent();
+                        console.log("Word definition API response:", data);
+                        this.WORD_DEFINITION = data[0].defs[0];
+                        return [3 /*break*/, 4];
+                    case 3:
+                        error_2 = _a.sent();
+                        console.error("Error fetching associated definition:", error_2);
+                        return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
@@ -84,7 +113,7 @@ var Game = /** @class */ (function () {
                         return [4 /*yield*/, this.fetchRandomWord()];
                     case 1:
                         _a.RANDOM_WORD = _b.sent();
-                        HIDDEN_ARRAY = new Array(this.RANDOM_WORD.length).fill("❔ ");
+                        HIDDEN_ARRAY = new Array(this.RANDOM_WORD.length).fill("🟦 ");
                         HIDDEN_WORD = HIDDEN_ARRAY.join("");
                         if (this.SHOW_WORD) {
                             this.SHOW_WORD.textContent = HIDDEN_WORD;
@@ -93,6 +122,9 @@ var Game = /** @class */ (function () {
                                 _this.SHOW_WORD.style.opacity = "1";
                             }, 50);
                         }
+                        return [4 /*yield*/, this.fetchWordDefinition()];
+                    case 2:
+                        _b.sent();
                         return [2 /*return*/];
                 }
             });
@@ -108,7 +140,9 @@ var Game = /** @class */ (function () {
     //important method for game; defines most of the game logic
     Game.prototype.handleLetterClick = function (clickedElement, LETTER_POSITION) {
         if (LETTER_POSITION.length > 0) {
-            var HIDDEN_ARRAY_1 = this.SHOW_WORD ? (this.SHOW_WORD.textContent || "").split(" ") : [];
+            var HIDDEN_ARRAY_1 = this.SHOW_WORD
+                ? (this.SHOW_WORD.textContent || "").split(" ")
+                : [];
             LETTER_POSITION.forEach(function (position) {
                 HIDDEN_ARRAY_1[position] = clickedElement.textContent || "";
             });
@@ -120,13 +154,20 @@ var Game = /** @class */ (function () {
                 if (ui.SHOW_GUESSES) {
                     ui.SHOW_GUESSES.textContent = "";
                 }
-                if (ui.GUESS_CHECKER && this.RANDOM_WORD) {
-                    ui.GUESS_CHECKER_IMAGE.innerHTML = "<img src=\"./assets/images/winner.gif\">";
-                    ui.GUESS_CHECKER.textContent = "You guessed the word \"".concat(this.RANDOM_WORD, "\"!");
+                this.keydownListener = false;
+                if (ui.SHOW_RANDOM_WORD && this.RANDOM_WORD) {
+                    ui.RANDOM_WORD_RESULT.innerHTML = "Winner!";
+                    ui.SHOW_RANDOM_WORD.textContent = "".concat(this.RANDOM_WORD);
                 }
-                /*if (ui.PLAY_BUTTON) {
-                  ui.PLAY_BUTTON.removeAttribute("hidden");
-                }*/
+                if (ui.WORD_DEFINITION) {
+                    ui.WORD_DEFINITION.classList.remove("hidden");
+                    ui.WORD_DEFINITION.classList.add("flex");
+                }
+                if (this.SHOW_DEFINITION) {
+                    this.SHOW_DEFINITION.classList.remove("hidden");
+                    this.SHOW_DEFINITION.textContent =
+                        this.WORD_DEFINITION || "Definition not available";
+                }
                 if (ui.RESET_BUTTON) {
                     ui.RESET_BUTTON.removeAttribute("hidden");
                     if (this.SHOW_WORD) {
@@ -137,11 +178,6 @@ var Game = /** @class */ (function () {
                     }
                 }
                 ui.displayFireworks();
-                /*
-                if (this.RANDOM_WORD) {
-                  scores.updateScoreTable(this.RANDOM_WORD);
-                }
-                */
             }
         }
         else {
@@ -154,9 +190,19 @@ var Game = /** @class */ (function () {
             clickedElement.style.display = "none";
             if (MAX_INCORRECT_GUESSES === 0) {
                 this.incorrectGuesses--;
-                if (ui.GUESS_CHECKER && this.RANDOM_WORD) {
-                    ui.GUESS_CHECKER_IMAGE.innerHTML = "<img src=\"./assets/images/loser.gif\">";
-                    ui.GUESS_CHECKER.textContent = "Word was \"".concat(this.RANDOM_WORD, "\"");
+                if (ui.SHOW_RANDOM_WORD && this.RANDOM_WORD) {
+                    ui.RANDOM_WORD_RESULT.innerHTML = "Loser!";
+                    ui.SHOW_RANDOM_WORD.innerHTML = "".concat(this.RANDOM_WORD);
+                }
+                this.keydownListener = false;
+                if (ui.WORD_DEFINITION) {
+                    ui.WORD_DEFINITION.classList.remove("hidden");
+                    ui.WORD_DEFINITION.classList.add("flex");
+                }
+                if (this.SHOW_DEFINITION) {
+                    this.SHOW_DEFINITION.classList.remove("hidden");
+                    this.SHOW_DEFINITION.textContent =
+                        this.WORD_DEFINITION || "Definition not available";
                 }
                 if (ui.RESET_BUTTON) {
                     ui.RESET_BUTTON.removeAttribute("hidden");
@@ -177,32 +223,35 @@ var Game = /** @class */ (function () {
         this.lettersEnabled = false;
         this.RANDOM_WORD = null;
         this.incorrectGuesses = 0;
+        this.WORD_DEFINITION = null;
         if (this.SHOW_WORD) {
             this.SHOW_WORD.textContent = "";
         }
         if (ui.SHOW_GUESSES) {
             ui.SHOW_GUESSES.textContent = "";
         }
-        if (ui.GUESS_CHECKER_IMAGE) {
-            ui.GUESS_CHECKER_IMAGE.innerHTML = "";
+        if (ui.RANDOM_WORD_RESULT) {
+            ui.RANDOM_WORD_RESULT.innerHTML = "";
         }
-        if (ui.GUESS_CHECKER) {
-            ui.GUESS_CHECKER.textContent = "";
+        if (ui.WORD_DEFINITION) {
+            ui.WORD_DEFINITION.classList.remove("flex");
+            ui.WORD_DEFINITION.classList.add("hidden");
+        }
+        if (this.SHOW_DEFINITION) {
+            this.SHOW_DEFINITION.classList.add("hidden");
+            this.SHOW_DEFINITION.textContent = "";
+        }
+        if (ui.SHOW_RANDOM_WORD) {
+            ui.SHOW_RANDOM_WORD.textContent = "";
         }
         if (ui.RESET_BUTTON) {
             ui.RESET_BUTTON.setAttribute("hidden", "true");
         }
-        /*if (ui.PLAY_BUTTON) {
-          ui.PLAY_BUTTON.setAttribute("hidden", "true");
-        }*/
-        if (ui.WORD_SCORE_TABLE) {
-            ui.WORD_SCORE_TABLE.classList.add("hidden");
-        }
-        if (ui.QUESTION_MARK) {
-            ui.QUESTION_MARK.style.display = "";
+        if (ui.QUESTION_MARK_IMAGE) {
+            ui.QUESTION_MARK_IMAGE.style.display = "";
         }
         if (ui.HOW_TO_PLAY_BUTTON) {
-            ui.HOW_TO_PLAY_BUTTON.classList.remove("hidden");
+            ui.HOW_TO_PLAY_BUTTON.style.display = "";
         }
         if (ui.PLAY_BUTTON) {
             ui.PLAY_BUTTON.style.display = "";
@@ -212,6 +261,8 @@ var Game = /** @class */ (function () {
         var ALPHABET_LETTERS = document.querySelectorAll("#alphabet li");
         ALPHABET_LETTERS.forEach(function (letter) {
             letter.style.display = "";
+            //ensures used letters from previous game are listened to again
+            letter.classList.remove("used");
         });
         if (ui.ALPHABET_CONTAINER) {
             ui.ALPHABET_CONTAINER.style.display = "none";
@@ -225,20 +276,17 @@ var Ui = /** @class */ (function () {
         var _this = this;
         this.game = game;
         this.RESET_BUTTON = document.querySelector("#reset");
-        //this.PLAY_BUTTON = document.querySelector("#continue");
         this.PLAY_BUTTON = document.querySelector("#play-button");
         this.SHOW_GUESSES = document.querySelector("#attemptsOutput");
-        this.GUESS_CHECKER = document.querySelector("#win-lose-check");
-        this.GUESS_CHECKER_IMAGE = document.querySelector("#win-title");
+        this.SHOW_RANDOM_WORD = document.querySelector("#show-random-word");
+        this.RANDOM_WORD_RESULT = document.querySelector("#win-lose-checker");
         this.ALPHABET_CONTAINER = document.querySelector("#alphabet");
         this.FIREWORKS_CONTAINER = document.querySelector("#fireworks-container");
-        this.WORD_SCORE_TABLE = document.querySelector("#word-score-table");
         this.HOW_TO_PLAY_BUTTON = document.querySelector("#how-to-play-button");
-        this.HOW_TO_PLAY = document.querySelector("#how-to-play");
-        this.QUESTION_MARK = document.querySelector("#question-mark");
+        this.QUESTION_MARK_IMAGE = document.querySelector("#question-mark");
+        this.WORD_DEFINITION = document.querySelector(".popover-definition");
         this.createAlphabetButtons();
         this.handleFetchWordButtonClick();
-        this.howToPlayButton();
         this.handleKeyDown();
         // Listener for reset/continue
         if (this.RESET_BUTTON) {
@@ -246,17 +294,12 @@ var Ui = /** @class */ (function () {
                 _this.game.newGame();
             });
         }
-        /* if (this.PLAY_BUTTON) {
-              this.PLAY_BUTTON.addEventListener("click", () => {
-                this.game.newGame();
-              });
-            }*/
     }
     Ui.prototype.createAlphabetButtons = function () {
         for (var _i = 0, _a = game.ALPHABET; _i < _a.length; _i++) {
             var letter = _a[_i];
             //makes each letter into li element
-            var ALPHABET_LETTER = document.createElement('li');
+            var ALPHABET_LETTER = document.createElement("li");
             ALPHABET_LETTER.textContent = letter;
             //select based on the letter value
             ALPHABET_LETTER.setAttribute("data-letter", letter);
@@ -272,33 +315,20 @@ var Ui = /** @class */ (function () {
                 if (_this.PLAY_BUTTON) {
                     _this.PLAY_BUTTON.style.display = "none";
                 }
+                if (game.WORD_DEFINITION) {
+                    game.WORD_DEFINITION = null;
+                }
                 if (_this.ALPHABET_CONTAINER) {
                     _this.ALPHABET_CONTAINER.style.display = "grid";
                 }
                 if (_this.HOW_TO_PLAY_BUTTON) {
                     _this.HOW_TO_PLAY_BUTTON.style.display = "none";
                 }
-                if (_this.HOW_TO_PLAY) {
-                    _this.HOW_TO_PLAY.classList.add("hidden");
+                if (_this.QUESTION_MARK_IMAGE) {
+                    _this.QUESTION_MARK_IMAGE.style.display = "none";
                 }
-                if (_this.QUESTION_MARK) {
-                    _this.QUESTION_MARK.style.display = "none";
-                }
+                game.keydownListener = true;
                 game.selectRandomWord();
-            });
-        }
-    };
-    //event listener for how to play button
-    Ui.prototype.howToPlayButton = function () {
-        var _this = this;
-        if (this.HOW_TO_PLAY_BUTTON) {
-            this.HOW_TO_PLAY_BUTTON.addEventListener("click", function () {
-                if (_this.HOW_TO_PLAY_BUTTON) {
-                    _this.HOW_TO_PLAY_BUTTON.style.display = "none";
-                }
-                if (_this.HOW_TO_PLAY) {
-                    _this.HOW_TO_PLAY.classList.remove("hidden");
-                }
             });
         }
     };
@@ -322,9 +352,13 @@ var Ui = /** @class */ (function () {
     };
     //keyboard event listener
     Ui.prototype.handleKeyDown = function () {
-        window.addEventListener("keydown", function (event) {
+        window.addEventListener("keyup", function (event) {
+            if (!game.keydownListener)
+                return;
             var key = event.key.toLowerCase();
-            if (game.RANDOM_WORD && game.lettersEnabled && game.ALPHABET.includes(key)) {
+            if (game.RANDOM_WORD &&
+                game.lettersEnabled &&
+                game.ALPHABET.includes(key)) {
                 var target = document.querySelector("li[data-letter=\"".concat(key, "\"]:not(.used)"));
                 if (target) {
                     var LETTER_POSITION = [];
@@ -340,14 +374,11 @@ var Ui = /** @class */ (function () {
         });
     };
     Ui.prototype.displayFireworks = function () {
-        if (this.GUESS_CHECKER) {
-            this.GUESS_CHECKER.classList.add("z-20");
+        if (this.SHOW_RANDOM_WORD) {
+            this.SHOW_RANDOM_WORD.classList.add("z-20");
         }
         if (this.RESET_BUTTON) {
             this.RESET_BUTTON.classList.add("z-20");
-        }
-        if (this.WORD_SCORE_TABLE) {
-            this.WORD_SCORE_TABLE.classList.remove("hidden");
         }
         if (this.FIREWORKS_CONTAINER) {
             var FIREWORKS = document.createElement("img");
@@ -360,29 +391,3 @@ var Ui = /** @class */ (function () {
     return Ui;
 }());
 var ui = new Ui(game);
-/* (When I figure out in-depth score stuff)
-class Scores {
-  game: Game;
-
-  constructor(game: Game) {
-    this.game = game;
-  }
-
-  updateScoreTable(word: string): void {
-    const WORD_SCORE: number = word.length * 10;
-    const TOTAL_SCORE: number = game.currentScore += WORD_SCORE;
-  
-    const ROW: HTMLTableRowElement = ui.WORD_SCORE_TABLE.insertRow();
-    const WORD_CELL: HTMLTableCellElement = ROW.insertCell(0);
-    const SCORE_CELL: HTMLTableCellElement = ROW.insertCell(1);
-
-    WORD_CELL.textContent = word;
-    SCORE_CELL.textContent = WORD_SCORE.toString();
-    
-   if (ui.PLAY_BUTTON) {
-    const TOTAL_SCORE_CELL: HTMLTableCellElement = ROW.insertCell(2);
-    TOTAL_SCORE_CELL.textContent = TOTAL_SCORE.toString();
-   }
-  }
-}
-const scores = new Scores(game);*/ 

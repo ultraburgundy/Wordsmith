@@ -1,7 +1,10 @@
 const path = require("path");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 
 module.exports = {
+    mode: 'development',
     entry: "./src/index.js",
     output: {
         filename: "index[contenthash].js",
@@ -18,7 +21,8 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/i,
-                use: [ "style-loader", "css-loader", "postcss-loader",],
+                use: [ "style-loader", "css-loader",],
+                exclude: /node_modules/,
             },
             {
                 test: /\.(png|gif|svg|jpg)$/i,
@@ -37,6 +41,12 @@ module.exports = {
             title: "Wordsmith",
             filename: "index.html",
             template: "./src/index.html",
-        })
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+              { from: './src/assets', to: 'assets' },
+              { from: './src/styles', to: 'styles' }
+            ]
+          })
     ]
 }

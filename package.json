@@ -1,6 +1,6 @@
 {
   "name": "wordsmith",
-  "version": "1.2.3",
+  "version": "1.2.5",
   "description": "word-guessing game",
   "scripts": {
     "build-css": "tailwindcss build -i src/styles/styles.css -o src/styles/tailwind-styles.css --watch",
@@ -10,18 +10,17 @@
   "author": "rem",
   "license": "ISC",
   "dependencies": {
+    "flowbite": "^1.6.5",
     "html-webpack-plugin": "^5.5.0",
     "lodash": "^4.17.21",
     "package-lock-only": "^0.0.4",
-    "tailwindcss": "^3.2.7",
+    "tailwindcss": "^3.3.1",
     "ts-loader": "^9.4.2"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.3",
     "gh-pages": "^5.0.0",
-    "postcss": "^8.4.21",
-    "postcss-loader": "^7.2.4",
-    "postcss-preset-env": "^8.3.0",
     "style-loader": "^3.3.2",
     "webpack": "^5.78.0",
     "webpack-cli": "^5.0.1"

@@ -4,6 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 body {
   font-family: "Cutive Mono", monospace;
 }
@@ -20,7 +22,13 @@ body {
   max-height:300px;
   margin: 0 auto;
  }
-
+ h3 {
+  @apply font-semibold text-slate-950 dark:text-slate-400;
+ }
+ button {
+  @apply
+  text-center transition duration-1000 ease-in-out border-2 rounded-lg dark:text-slate-400 text-slate-950 border-slate-950 hover:bg-slate-300 dark:border-slate-400 dark:hover:text-slate-950 dark:hover:bg-slate-700;
+ }
 
 
 #alphabet {
@@ -33,6 +41,7 @@ body {
 }
   
 #alphabet li {
+  @apply dark:text-slate-400 text-slate-950;
   margin: auto;
   list-style: none;
   width: 2.5rem;
@@ -49,10 +58,14 @@ body {
 
   
 #alphabet li:hover {
-  @apply bg-slate-400 dark:bg-slate-600 dark:text-slate-950;
+  @apply bg-slate-300 text-slate-950 dark:bg-slate-700 dark:text-slate-950;
   /*background: linear-gradient(135deg, rgb(255, 102, 102), rgb(197, 8, 8));*/
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
   transform: translateY(-4px);
+}
+
+p {
+  @apply dark:text-slate-400 text-slate-950
 }
 
 @media (max-width: 640px) {
@@ -81,10 +94,5 @@ body {
   opacity: 15%;
 }
 
-table tr {
-  font-weight: bold;
-  font-size: 1rem;
-  
-}
 
 
